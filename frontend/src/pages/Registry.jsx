@@ -179,15 +179,6 @@ export const Registry = () => {
                       Contribute
                     </button>
                   )}
-                  {item.contributions.length > 0 && (
-                    <button
-                      onClick={() => openContributorsModal(item)}
-                      className="flex-1 bg-light-cream text-warm-brown px-4 py-2 rounded-lg hover:bg-border-brown transition-colors border border-border-brown"
-                      data-testid={`contributors-btn-${item.id}`}
-                    >
-                      View Contributors ({item.contributions.length})
-                    </button>
-                  )}
                 </div>
               </motion.div>
             ))}
