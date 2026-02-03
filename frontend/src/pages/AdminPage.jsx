@@ -402,6 +402,7 @@ export const AdminPage = () => {
                         <th className="text-left py-3 px-4 text-dark-brown font-semibold">Pax</th>
                         <th className="text-left py-3 px-4 text-dark-brown font-semibold">Wishes</th>
                         <th className="text-left py-3 px-4 text-dark-brown font-semibold">Date</th>
+                        <th className="text-center py-3 px-4 text-dark-brown font-semibold">Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -413,11 +414,21 @@ export const AdminPage = () => {
                           <td className="py-3 px-4 text-medium-brown text-sm">
                             {new Date(rsvp.timestamp).toLocaleDateString()}
                           </td>
+                          <td className="py-3 px-4 text-center">
+                            <button
+                              onClick={() => handleDeleteRSVP(rsvp.id)}
+                              className="text-red-500 hover:text-red-700 transition-colors p-1"
+                              title="Delete RSVP"
+                              data-testid={`delete-rsvp-${index}`}
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </td>
                         </tr>
                       ))}
                       {rsvps.length === 0 && (
                         <tr>
-                          <td colSpan="4" className="text-center py-8 text-medium-brown">
+                          <td colSpan="5" className="text-center py-8 text-medium-brown">
                             No RSVPs yet
                           </td>
                         </tr>
