@@ -194,6 +194,75 @@ export const AdminPage = () => {
     }
   };
 
+  const getAllContributions = () => {
+    const allContributions = [];
+    registry.forEach(item => {
+      item.contributions.forEach((contrib, index) => {
+        allContributions.push({
+          itemId: item.id,
+          itemName: item.name,
+          itemTotal: item.total,
+          contributorName: contrib.contributor_name,
+          amount: contrib.amount,
+          timestamp: contrib.timestamp,
+          contributionIndex: index
+        });
+      });
+    });
+    return allContributions;
+  };
+
+  const getSortedContributions = () => {
+    const contributions = getAllContributions();
+    
+    return contributions.sort((a, b) => {
+      let compareA, compareB;
+      
+      switch(sortField) {
+        case 'item':
+          compareA = a.itemName.toLowerCase();
+          compareB = b.itemName.toLowerCase();
+          break;
+        case 'contributor':
+          compareA = a.contributorName.toLowerCase();
+          compareB = b.contributorName.toLowerCase();
+          break;
+        case 'amount':
+          compareA = a.amount;
+          compareB = b.amount;
+          break;
+        case 'timestamp':
+        default:
+          compareA = new Date(a.timestamp);
+          compareB = new Date(b.timestamp);
+          break;
+      }
+      
+      if (compareA < compareB) return sortDirection === 'asc' ? -1 : 1;
+      if (compareA > compareB) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+  };
+
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('desc');
+    }
+  };
+
+  const getTotalContributed = () => {
+    return registry.reduce((sum, item) => sum + item.contributed, 0);
+  };
+
+  const getTotalFundedPercentage = () => {
+    const totalNeeded = registry.reduce((sum, item) => sum + item.total, 0);
+    const totalContributed = getTotalContributed();
+    return totalNeeded > 0 ? (totalContributed / totalNeeded * 100).toFixed(1) : 0;
+  };
+
   if (!authenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-cream font-georgia">
