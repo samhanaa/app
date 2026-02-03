@@ -463,7 +463,17 @@ export const AdminPage = () => {
                   className="bg-white rounded-xl shadow-lg p-6 border border-border-brown"
                 >
                   <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-warm-brown">Gift Contributions</h2>
+                    <div>
+                      <h2 className="text-2xl font-bold text-warm-brown">Gift Contributions</h2>
+                      <div className="flex gap-6 mt-2 text-sm">
+                        <span className="text-dark-brown">
+                          <strong>Total Contributed:</strong> <span className="text-gold font-bold">RM {getTotalContributed().toFixed(2)}</span>
+                        </span>
+                        <span className="text-dark-brown">
+                          <strong>Funded:</strong> <span className="text-warm-brown font-bold">{getTotalFundedPercentage()}%</span>
+                        </span>
+                      </div>
+                    </div>
                     <div className="flex gap-3">
                       <button
                         onClick={exportContributions}
@@ -492,48 +502,69 @@ export const AdminPage = () => {
                       </button>
                     </div>
                   </div>
-                  <div className="space-y-6">
-                    {registry.map((item) => (
-                      <div key={item.id} className="border border-border-brown rounded-lg p-4" data-testid={`registry-item-${item.id}`}>
-                        <div className="flex justify-between items-start mb-3">
-                          <div>
-                            <h3 className="text-xl font-bold text-warm-brown">{item.name}</h3>
-                            <p className="text-medium-brown text-sm">Total: RM {item.total.toFixed(2)}</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-gold font-bold text-lg">RM {item.contributed.toFixed(2)}</p>
-                            <p className="text-medium-brown text-sm">
-                              {((item.contributed / item.total) * 100).toFixed(1)}% funded
-                            </p>
-                          </div>
-                        </div>
-                        {item.contributions.length > 0 ? (
-                          <div className="bg-light-cream/50 rounded-lg p-3">
-                            <p className="text-dark-brown font-semibold mb-2 text-sm">Contributors:</p>
-                            <div className="space-y-2">
-                              {item.contributions.map((contrib, idx) => (
-                                <div key={idx} className="flex justify-between items-center text-sm">
-                                  <div className="flex-1">
-                                    <span className="text-dark-brown">{contrib.contributor_name}</span>
-                                    <span className="text-gold font-semibold ml-4">RM {contrib.amount.toFixed(2)}</span>
-                                  </div>
-                                  <button
-                                    onClick={() => handleDeleteContribution(item.id, idx)}
-                                    className="ml-4 text-red-500 hover:text-red-700 transition-colors p-1"
-                                    title="Delete contribution"
-                                    data-testid={`delete-contribution-${item.id}-${idx}`}
-                                  >
-                                    <Trash2 size={16} />
-                                  </button>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        ) : (
-                          <p className="text-medium-brown text-sm italic">No contributions yet</p>
+
+                  {/* Sortable Table */}
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b-2 border-border-brown">
+                          <th 
+                            className="text-left py-3 px-4 text-dark-brown font-semibold cursor-pointer hover:bg-light-cream/30"
+                            onClick={() => handleSort('item')}
+                          >
+                            Item {sortField === 'item' && (sortDirection === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th 
+                            className="text-left py-3 px-4 text-dark-brown font-semibold cursor-pointer hover:bg-light-cream/30"
+                            onClick={() => handleSort('contributor')}
+                          >
+                            Contributor {sortField === 'contributor' && (sortDirection === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th 
+                            className="text-left py-3 px-4 text-dark-brown font-semibold cursor-pointer hover:bg-light-cream/30"
+                            onClick={() => handleSort('amount')}
+                          >
+                            Amount {sortField === 'amount' && (sortDirection === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th 
+                            className="text-left py-3 px-4 text-dark-brown font-semibold cursor-pointer hover:bg-light-cream/30"
+                            onClick={() => handleSort('timestamp')}
+                          >
+                            Date {sortField === 'timestamp' && (sortDirection === 'asc' ? '↑' : '↓')}
+                          </th>
+                          <th className="text-center py-3 px-4 text-dark-brown font-semibold">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {getSortedContributions().map((contrib, index) => (
+                          <tr key={`${contrib.itemId}-${contrib.contributionIndex}`} className="border-b border-light-cream hover:bg-light-cream/50">
+                            <td className="py-3 px-4 text-dark-brown">{contrib.itemName}</td>
+                            <td className="py-3 px-4 text-dark-brown">{contrib.contributorName}</td>
+                            <td className="py-3 px-4 text-gold font-semibold">RM {contrib.amount.toFixed(2)}</td>
+                            <td className="py-3 px-4 text-medium-brown text-sm">
+                              {new Date(contrib.timestamp).toLocaleDateString()} {new Date(contrib.timestamp).toLocaleTimeString()}
+                            </td>
+                            <td className="py-3 px-4 text-center">
+                              <button
+                                onClick={() => handleDeleteContribution(contrib.itemId, contrib.contributionIndex)}
+                                className="text-red-500 hover:text-red-700 transition-colors p-1"
+                                title="Delete contribution"
+                                data-testid={`delete-contribution-${contrib.itemId}-${contrib.contributionIndex}`}
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                        {getSortedContributions().length === 0 && (
+                          <tr>
+                            <td colSpan="5" className="text-center py-8 text-medium-brown">
+                              No contributions yet
+                            </td>
+                          </tr>
                         )}
-                      </div>
-                    ))}
+                      </tbody>
+                    </table>
                   </div>
                 </motion.div>
               </div>
