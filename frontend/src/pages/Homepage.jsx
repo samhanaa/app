@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { DoorEntrance } from '../components/DoorEntrance';
-import { Countdown } from '../components/Countdown';
-import { MenuBar } from '../components/MenuBar';
-import { Modal } from '../components/Modal';
+import { DoorEntrance } from '../components/DoorEntrance.jsx';
+import { Countdown } from '../components/Countdown.jsx';
+import { MenuBar } from '../components/MenuBar.jsx';
+import { Modal } from '../components/Modal.jsx';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
