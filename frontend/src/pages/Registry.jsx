@@ -194,6 +194,16 @@ export const Registry = () => {
         showHome={true}
       />
 
+      <div className="fixed bottom-6 right-6 z-30">
+        <button
+          onClick={() => navigate('/admin')}
+          className="text-xs text-medium-brown hover:text-warm-brown transition-colors underline"
+          data-testid="admin-link"
+        >
+          Ana & Faris's eyes only
+        </button>
+      </div>
+
       <Modal 
         isOpen={contributeOpen} 
         onClose={() => {
