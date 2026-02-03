@@ -89,6 +89,23 @@ async def get_rsvps():
     
     return rsvps
 
+@api_router.delete("/rsvp/{rsvp_id}")
+async def delete_rsvp(rsvp_id: str):
+    """Delete a specific RSVP"""
+    try:
+        result = await db.rsvps.delete_one({"id": rsvp_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="RSVP not found")
+        
+        return {"message": "RSVP deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting RSVP: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to delete RSVP: {str(e)}")
+
 # Gift Registry Routes
 @api_router.get("/registry", response_model=List[GiftItem])
 async def get_registry():
