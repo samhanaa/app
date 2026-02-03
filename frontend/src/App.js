@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
 import { Homepage } from "./pages/Homepage.jsx";
 import { Registry } from "./pages/Registry.jsx";
+import { AdminPage } from "./pages/AdminPage.jsx";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/registry" element={<Registry />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </BrowserRouter>
     </>
