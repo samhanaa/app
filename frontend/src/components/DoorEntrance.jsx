@@ -64,7 +64,7 @@ export const DoorEntrance = ({ onOpen }) => {
           <div 
             className="w-full h-full bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: 'url(https://images.unsplash.com/photo-1634125939366-bef6e0300eb7?crop=entropy&cs=srgb&fm=jpg&q=85)',
+              backgroundImage: 'url(https://images.unsplash.com/photo-1721059736449-a240cc8036d6?crop=entropy&cs=srgb&fm=jpg&q=85)',
               backgroundPosition: 'right center'
             }}
           />
