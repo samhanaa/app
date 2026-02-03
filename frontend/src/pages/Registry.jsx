@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { MenuBar } from '../components/MenuBar';
-import { Modal } from '../components/Modal';
+import { MenuBar } from '../components/MenuBar.jsx';
+import { Modal } from '../components/Modal.jsx';
 import { Progress } from '../components/ui/progress';
 import { ExternalLink } from 'lucide-react';
 
