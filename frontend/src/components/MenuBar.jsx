@@ -7,7 +7,7 @@ export const MenuBar = ({ onContactClick, onLocationClick, onRSVPClick, onGiftCl
       initial={{ y: 100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.5, duration: 0.5 }}
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40"
+      className="fixed bottom-3 left-3 z-40"
     >
       <div className="bg-warm-brown text-cream rounded-full px-8 py-4 shadow-2xl flex gap-6 md:gap-8">
         <motion.button
