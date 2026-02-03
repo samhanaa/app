@@ -59,7 +59,7 @@ export const Homepage = () => {
       <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat -z-10"
         style={{
-          backgroundImage: 'url(https://images.unsplash.com/photo-1762086931964-373bceb5a690?crop=entropy&cs=srgb&fm=jpg&q=85)',
+          backgroundImage: 'url(https://images.unsplash.com/photo-1685040235380-a42a129ade4e?crop=entropy&cs=srgb&fm=jpg&q=85)',
           backgroundAttachment: 'fixed'
         }}
       />
