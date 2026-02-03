@@ -263,6 +263,21 @@ export const AdminPage = () => {
     return totalNeeded > 0 ? (totalContributed / totalNeeded * 100).toFixed(1) : 0;
   };
 
+  const handleDeleteRSVP = async (rsvpId) => {
+    if (!window.confirm('Are you sure you want to delete this RSVP?')) {
+      return;
+    }
+
+    try {
+      await axios.delete(`${API}/rsvp/${rsvpId}`);
+      toast.success('RSVP deleted successfully');
+      fetchData();
+    } catch (error) {
+      console.error('Delete error:', error);
+      toast.error(error.response?.data?.detail || 'Failed to delete RSVP');
+    }
+  };
+
   if (!authenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-cream font-georgia">
