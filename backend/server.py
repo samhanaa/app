@@ -212,14 +212,16 @@ async def upload_registry_list(file: UploadFile = File(...)):
     """
     Upload a CSV file with just the registry items (no contributions).
     CSV format: Item,Link,Total
+    This will preserve existing contributions.
     """
     try:
         contents = await file.read()
         decoded = contents.decode('utf-8')
         csv_reader = csv.DictReader(io.StringIO(decoded))
         
-        # Clear existing registry
-        await db.registry.delete_many({})
+        # Get existing registry with contributions
+        existing_items = await db.registry.find({}, {"_id": 0}).to_list(1000)
+        existing_dict = {item['id']: item for item in existing_items}
         
         items = []
         for row in csv_reader:
@@ -229,20 +231,36 @@ async def upload_registry_list(file: UploadFile = File(...)):
             
             item_id = item_name.lower().replace(' ', '-')
             
-            items.append({
-                'id': item_id,
-                'name': item_name,
-                'link': link,
-                'total': total,
-                'contributed': 0.0,
-                'contributions': []
-            })
+            # Preserve existing contributions if item already exists
+            if item_id in existing_dict:
+                items.append({
+                    'id': item_id,
+                    'name': item_name,
+                    'link': link,
+                    'total': total,
+                    'contributed': existing_dict[item_id].get('contributed', 0.0),
+                    'contributions': existing_dict[item_id].get('contributions', [])
+                })
+            else:
+                # New item with no contributions
+                items.append({
+                    'id': item_id,
+                    'name': item_name,
+                    'link': link,
+                    'total': total,
+                    'contributed': 0.0,
+                    'contributions': []
+                })
         
+        # Clear existing registry
+        await db.registry.delete_many({})
+        
+        # Insert updated items
         if items:
             await db.registry.insert_many(items)
         
         return {
-            "message": "Registry list updated successfully",
+            "message": "Registry list updated successfully (contributions preserved)",
             "items_count": len(items)
         }
         
