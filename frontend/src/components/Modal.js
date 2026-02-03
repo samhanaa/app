@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 
 export const Modal = ({ isOpen, onClose, children, title }) => {
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {isOpen && (
         <>
           <motion.div
