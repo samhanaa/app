@@ -61,6 +61,7 @@ export const Homepage = () => {
       toast.success('Thank you for your RSVP! We look forward to seeing you!');
       setRsvpForm({ name: '', pax: '', wishes: '' });
       setRsvpOpen(false);
+      fetchWishes(); // Refresh wishes
     } catch (error) {
       console.error('RSVP error:', error);
       toast.error('Failed to submit RSVP. Please try again.');
