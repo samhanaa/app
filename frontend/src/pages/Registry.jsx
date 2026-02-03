@@ -30,6 +30,10 @@ export const Registry = () => {
     wishes: ''
   });
 
+  const weddingDate = '2026-07-25T11:00:00';
+  const rsvpCutoffDate = new Date('2026-07-24T23:59:59');
+  const isRsvpClosed = new Date() > rsvpCutoffDate;
+
   useEffect(() => {
     fetchRegistry();
   }, []);
