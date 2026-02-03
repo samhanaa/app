@@ -137,6 +137,34 @@ export const Homepage = () => {
             </div>
           </motion.div>
 
+          {/* Wishes Section */}
+          {wishes.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="bg-white/3 backdrop-blur-md border border-white/20 shadow-xl rounded-xl md:rounded-2xl p-8 md:p-12"
+              data-testid="wishes-section"
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-warm-brown text-center mb-8">Wishes from Our Guests</h2>
+              <div className="max-h-96 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
+                {wishes.map((wish, index) => (
+                  <motion.div
+                    key={wish.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-border-brown/30"
+                  >
+                    <p className="text-dark-brown italic mb-2">"{wish.wishes}"</p>
+                    <p className="text-medium-brown text-sm font-semibold">— {wish.name}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
         </div>
       </div>
 
