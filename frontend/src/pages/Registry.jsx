@@ -223,9 +223,9 @@ export const Registry = () => {
       </div>
 
       <MenuBar
-        onContactClick={() => {}}
-        onLocationClick={() => {}}
-        onRSVPClick={() => {}}
+        onContactClick={() => setContactOpen(true)}
+        onLocationClick={() => setLocationOpen(true)}
+        onRSVPClick={() => setRsvpOpen(true)}
         onGiftClick={() => navigate('/')}
         showHome={true}
       />
