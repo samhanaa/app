@@ -17,6 +17,7 @@ export const Homepage = () => {
   const [contactOpen, setContactOpen] = useState(false);
   const [locationOpen, setLocationOpen] = useState(false);
   const [rsvpOpen, setRsvpOpen] = useState(false);
+  const [wishes, setWishes] = useState([]);
   
   const [rsvpForm, setRsvpForm] = useState({
     name: '',
@@ -27,6 +28,20 @@ export const Homepage = () => {
   const weddingDate = '2026-07-25T11:00:00';
   const rsvpCutoffDate = new Date('2026-07-24T23:59:59');
   const isRsvpClosed = new Date() > rsvpCutoffDate;
+
+  useEffect(() => {
+    fetchWishes();
+  }, []);
+
+  const fetchWishes = async () => {
+    try {
+      const response = await axios.get(`${API}/rsvp`);
+      const rsvpsWithWishes = response.data.filter(rsvp => rsvp.wishes && rsvp.wishes.trim() !== '');
+      setWishes(rsvpsWithWishes);
+    } catch (error) {
+      console.error('Failed to fetch wishes:', error);
+    }
+  };
 
   const handleRsvpSubmit = async (e) => {
     e.preventDefault();
