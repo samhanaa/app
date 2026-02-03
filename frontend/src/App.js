@@ -1,8 +1,8 @@
 import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "sonner";
-import { Homepage } from "./pages/Homepage";
-import { Registry } from "./pages/Registry";
+import { Homepage } from "./pages/Homepage.jsx";
+import { Registry } from "./pages/Registry.jsx";
 
 function App() {
   return (
