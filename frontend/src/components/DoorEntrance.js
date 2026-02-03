@@ -31,19 +31,18 @@ export const DoorEntrance = ({ onOpen }) => {
       <audio ref={audioRef} src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto" />
       
       <motion.div
-        style={{ x: leftDoorX.get() + '%', opacity }}
+        style={{ opacity }}
         className="fixed top-0 left-0 w-1/2 h-screen z-50 pointer-events-none"
       >
         <motion.div
-          style={{ x: useTransform(scrollY, [0, 300], ['0%', '-100%']) }}
+          style={{ x: leftDoorX }}
           className="w-full h-full relative"
         >
           <div 
             className="w-full h-full bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: 'url(https://images.unsplash.com/photo-1634125939366-bef6e0300eb7?crop=entropy&cs=srgb&fm=jpg&q=85)',
-              backgroundPosition: 'left center',
-              clipPath: 'inset(0 0 0 0)'
+              backgroundPosition: 'left center'
             }}
           />
           <div className="absolute inset-0 flex items-center justify-center">
@@ -55,19 +54,18 @@ export const DoorEntrance = ({ onOpen }) => {
       </motion.div>
 
       <motion.div
-        style={{ x: rightDoorX.get() + '%', opacity }}
+        style={{ opacity }}
         className="fixed top-0 right-0 w-1/2 h-screen z-50 pointer-events-none"
       >
         <motion.div
-          style={{ x: useTransform(scrollY, [0, 300], ['0%', '100%']) }}
+          style={{ x: rightDoorX }}
           className="w-full h-full relative"
         >
           <div 
             className="w-full h-full bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: 'url(https://images.unsplash.com/photo-1634125939366-bef6e0300eb7?crop=entropy&cs=srgb&fm=jpg&q=85)',
-              backgroundPosition: 'right center',
-              clipPath: 'inset(0 0 0 0)'
+              backgroundPosition: 'right center'
             }}
           />
         </motion.div>
