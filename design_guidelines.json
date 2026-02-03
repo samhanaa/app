@@ -26,7 +26,7 @@
       "foreground": "#3E2723",
       "muted": "#EFEBE9",
       "muted_foreground": "#8D6E63",
-      "card": "rgba(255, 248, 225, 0.9)",
+      "card": "rgba(255, 248, 225, 0.95)",
       "card_foreground": "#3E2723",
       "border": "#D7CCC8",
       "input": "#EFEBE9",
@@ -54,12 +54,12 @@
   "images": {
     "backgrounds": {
       "cafe_interior": {
-        "url": "https://images.unsplash.com/photo-1762086931964-373bceb5a690?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "url": "https://www.istockphoto.com/photo/modern-restaurant-interior-design-gm1211547141-351392991",
         "alt": "Cozy cafe interior with warm hanging lights and blurred background",
         "usage": "Fixed background for the entire site"
       },
       "wooden_door": {
-        "url": "https://images.unsplash.com/photo-1634125939366-bef6e0300eb7?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "url": "https://www.istockphoto.com/photos/restaurant-front-door",
         "alt": "Vintage wooden double doors",
         "usage": "Split in half for the entrance animation"
       }
@@ -98,7 +98,7 @@
     "FloatingSection": {
       "description": "Transparent container with blurred backdrop for readability over the cafe background.",
       "specs": {
-        "bg": "bg-white/80 md:bg-white/60",
+        "bg": "bg-white/98 md:bg-white/80",
         "backdrop": "backdrop-blur-md",
         "border": "border border-white/20",
         "shadow": "shadow-xl",
