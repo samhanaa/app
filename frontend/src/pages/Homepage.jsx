@@ -72,7 +72,7 @@ export const Homepage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="bg-white/80 md:bg-white/60 backdrop-blur-md border border-white/20 shadow-xl rounded-xl md:rounded-2xl p-8 md:p-12 text-center"
+            className="bg-white/3 backdrop-blur-md border border-white/20 shadow-xl rounded-xl md:rounded-2xl p-8 md:p-12 text-center"
             data-testid="invitation-section"
           >
             <p className="text-lg md:text-xl text-medium-brown mb-4 tracking-wide">You're invited to</p>
