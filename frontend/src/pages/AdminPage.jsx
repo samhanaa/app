@@ -97,6 +97,56 @@ export const AdminPage = () => {
     toast.success('Contributions exported successfully!');
   };
 
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.name.endsWith('.csv')) {
+      toast.error('Please upload a CSV file');
+      return;
+    }
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await axios.post(`${API}/registry/upload-csv`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      toast.success(`Registry updated! ${response.data.items_count} items, ${response.data.total_contributions} contributions`);
+      fetchData(); // Refresh data
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error(error.response?.data?.detail || 'Failed to upload CSV');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const downloadSampleCSV = () => {
+    const sampleData = [
+      ['Item_name', 'Link', 'Total', 'Contributor', 'Amount', 'Timestamp'],
+      ['Plates', 'https://shopee.com.my', '100', '0', '0', ''],
+      ['Carpet', 'https://shopee.com.my', '200', 'John Doe', '50', new Date().toISOString()],
+      ['Carpet', 'https://shopee.com.my', '200', 'Jane Smith', '30', new Date().toISOString()]
+    ];
+    
+    const csvContent = sampleData.map(row => row.join(',').replace(/,(?=\S)/g, ', ')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'registry_template.csv';
+    link.click();
+    toast.success('Sample CSV downloaded!');
+  };
+
   if (!authenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-cream font-georgia">
