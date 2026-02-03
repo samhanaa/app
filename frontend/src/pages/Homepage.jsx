@@ -76,12 +76,12 @@ export const Homepage = () => {
             data-testid="invitation-section"
           >
             <p className="text-lg md:text-xl text-medium-brown mb-4 tracking-wide">You're invited to</p>
-            <h1 className="text-4xl md:text-6xl font-bold text-warm-brown mb-6 leading-tight">
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
               The Wedding of<br />Ana & Faris
             </h1>
             <div className="space-y-3 text-lg md:text-xl text-dark-brown">
               <p>at</p>
-              <p className="font-semibold text-2xl md:text-3xl text-warm-brown">Rinjani Majestic, Subang</p>
+              <p className="font-semibold text-2xl md:text-3xl text-white">Rinjani Majestic, Subang</p>
               <p>on</p>
               <p className="font-semibold text-xl md:text-2xl">25th of July, 2026</p>
               <p className="text-medium-brown">11 am to 4 pm</p>
