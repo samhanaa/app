@@ -84,6 +84,30 @@ export const Registry = () => {
     }
   };
 
+  const handleRsvpSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!rsvpForm.name || !rsvpForm.pax) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      await axios.post(`${API}/rsvp`, {
+        name: rsvpForm.name,
+        pax: parseInt(rsvpForm.pax),
+        wishes: rsvpForm.wishes
+      });
+      
+      toast.success('Thank you for your RSVP! We look forward to seeing you!');
+      setRsvpForm({ name: '', pax: '', wishes: '' });
+      setRsvpOpen(false);
+    } catch (error) {
+      console.error('RSVP error:', error);
+      toast.error('Failed to submit RSVP. Please try again.');
+    }
+  };
+
   const openContributeModal = (item) => {
     setSelectedItem(item);
     setContributeOpen(true);
