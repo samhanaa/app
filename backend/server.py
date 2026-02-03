@@ -133,6 +133,80 @@ async def add_contribution(input: ContributionCreate):
     
     return {"message": "Contribution added successfully", "new_total": new_contributed}
 
+@api_router.post("/registry/upload-csv")
+async def upload_registry_csv(file: UploadFile = File(...)):
+    """
+    Upload a CSV file to update the registry.
+    CSV format: Item_name, Link, Total, Contributor, Amount, Timestamp
+    If Contributor = 0, it's a new item with no contributions.
+    """
+    try:
+        # Read the CSV file
+        contents = await file.read()
+        decoded = contents.decode('utf-8')
+        csv_reader = csv.DictReader(io.StringIO(decoded))
+        
+        # Group data by item
+        items_dict = {}
+        
+        for row in csv_reader:
+            item_name = row.get('Item_name', '').strip()
+            link = row.get('Link', '').strip()
+            total = float(row.get('Total', 0))
+            contributor = row.get('Contributor', '').strip()
+            amount = float(row.get('Amount', 0)) if row.get('Amount') else 0
+            timestamp_str = row.get('Timestamp', '').strip()
+            
+            # Create item ID from name
+            item_id = item_name.lower().replace(' ', '-')
+            
+            # Initialize item if not exists
+            if item_id not in items_dict:
+                items_dict[item_id] = {
+                    'id': item_id,
+                    'name': item_name,
+                    'link': link,
+                    'total': total,
+                    'contributed': 0.0,
+                    'contributions': []
+                }
+            
+            # Add contribution if contributor is not "0"
+            if contributor and contributor != "0":
+                # Parse timestamp
+                if timestamp_str:
+                    try:
+                        contrib_timestamp = datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
+                    except:
+                        contrib_timestamp = datetime.now(timezone.utc)
+                else:
+                    contrib_timestamp = datetime.now(timezone.utc)
+                
+                contribution = {
+                    'contributor_name': contributor,
+                    'amount': amount,
+                    'timestamp': contrib_timestamp.isoformat()
+                }
+                items_dict[item_id]['contributions'].append(contribution)
+                items_dict[item_id]['contributed'] += amount
+        
+        # Clear existing registry
+        await db.registry.delete_many({})
+        
+        # Insert new items
+        if items_dict:
+            await db.registry.insert_many(list(items_dict.values()))
+        
+        return {
+            "message": "Registry updated successfully",
+            "items_count": len(items_dict),
+            "total_contributions": sum(len(item['contributions']) for item in items_dict.values())
+        }
+        
+    except Exception as e:
+        logger.error(f"Error uploading CSV: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Failed to process CSV: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 
