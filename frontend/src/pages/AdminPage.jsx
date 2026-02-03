@@ -219,6 +219,48 @@ export const AdminPage = () => {
           </div>
         ) : (
           <div className="space-y-8">
+            {/* Upload CSV Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-gold/10 border-2 border-gold rounded-xl shadow-lg p-6"
+            >
+              <h2 className="text-2xl font-bold text-warm-brown mb-4">Upload Registry CSV</h2>
+              <p className="text-dark-brown mb-4">
+                Upload a CSV file to update the registry. Format: Item_name, Link, Total, Contributor, Amount, Timestamp
+              </p>
+              <p className="text-medium-brown text-sm mb-4">
+                Note: If Contributor = 0, it will be added as a new item with no contributions.
+              </p>
+              <div className="flex gap-4">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".csv"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                  data-testid="csv-file-input"
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="flex items-center gap-2 bg-warm-brown text-cream px-6 py-3 rounded-lg hover:bg-dark-brown transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  data-testid="upload-csv-btn"
+                >
+                  <Upload size={20} />
+                  {uploading ? 'Uploading...' : 'Upload CSV'}
+                </button>
+                <button
+                  onClick={downloadSampleCSV}
+                  className="flex items-center gap-2 bg-light-cream text-warm-brown px-6 py-3 rounded-lg hover:bg-border-brown transition-colors border border-border-brown"
+                  data-testid="download-template-btn"
+                >
+                  <Download size={20} />
+                  Download Template
+                </button>
+              </div>
+            </motion.div>
+
             {/* RSVPs Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
