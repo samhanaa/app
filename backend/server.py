@@ -207,6 +207,89 @@ async def upload_registry_csv(file: UploadFile = File(...)):
         logger.error(f"Error uploading CSV: {str(e)}")
         raise HTTPException(status_code=400, detail=f"Failed to process CSV: {str(e)}")
 
+@api_router.post("/registry/upload-registry-list")
+async def upload_registry_list(file: UploadFile = File(...)):
+    """
+    Upload a CSV file with just the registry items (no contributions).
+    CSV format: Item,Link,Total
+    """
+    try:
+        contents = await file.read()
+        decoded = contents.decode('utf-8')
+        csv_reader = csv.DictReader(io.StringIO(decoded))
+        
+        # Clear existing registry
+        await db.registry.delete_many({})
+        
+        items = []
+        for row in csv_reader:
+            item_name = row.get('Item', '').strip()
+            link = row.get('Link', '').strip()
+            total = float(row.get('Total', 0))
+            
+            item_id = item_name.lower().replace(' ', '-')
+            
+            items.append({
+                'id': item_id,
+                'name': item_name,
+                'link': link,
+                'total': total,
+                'contributed': 0.0,
+                'contributions': []
+            })
+        
+        if items:
+            await db.registry.insert_many(items)
+        
+        return {
+            "message": "Registry list updated successfully",
+            "items_count": len(items)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error uploading registry list: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Failed to process CSV: {str(e)}")
+
+@api_router.delete("/registry/{item_id}/contribution/{contribution_index}")
+async def delete_contribution(item_id: str, contribution_index: int):
+    """Delete a specific contribution from an item"""
+    try:
+        item = await db.registry.find_one({"id": item_id}, {"_id": 0})
+        
+        if not item:
+            raise HTTPException(status_code=404, detail="Item not found")
+        
+        if contribution_index >= len(item.get('contributions', [])):
+            raise HTTPException(status_code=404, detail="Contribution not found")
+        
+        # Get the contribution to delete
+        contribution = item['contributions'][contribution_index]
+        amount_to_deduct = contribution['amount']
+        
+        # Remove the contribution
+        item['contributions'].pop(contribution_index)
+        
+        # Update contributed total
+        new_contributed = max(0, item.get('contributed', 0) - amount_to_deduct)
+        
+        await db.registry.update_one(
+            {"id": item_id},
+            {
+                "$set": {
+                    "contributions": item['contributions'],
+                    "contributed": new_contributed
+                }
+            }
+        )
+        
+        return {"message": "Contribution deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting contribution: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to delete contribution: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 
