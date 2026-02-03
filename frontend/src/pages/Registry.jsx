@@ -147,6 +147,15 @@ export const Registry = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-8"
           >
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={() => navigate('/admin')}
+                className="text-base text-warm-brown hover:text-dark-brown transition-colors font-semibold underline decoration-2"
+                data-testid="admin-link"
+              >
+                Ana & Faris's eyes only
+              </button>
+            </div>
             <h1 className="text-4xl md:text-5xl font-bold text-warm-brown mb-4">Gift Registry</h1>
             <p className="text-lg md:text-xl text-medium-brown">
               Your contributions will help us start our journey together
