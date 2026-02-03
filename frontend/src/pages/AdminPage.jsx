@@ -258,12 +258,221 @@ export const AdminPage = () => {
           </button>
         </div>
 
+        {/* Tabs */}
+        <div className="flex gap-4 mb-8 border-b-2 border-border-brown">
+          <button
+            onClick={() => setActiveTab('rsvp')}
+            className={`px-6 py-3 font-semibold transition-colors ${
+              activeTab === 'rsvp'
+                ? 'text-warm-brown border-b-4 border-warm-brown -mb-0.5'
+                : 'text-medium-brown hover:text-warm-brown'
+            }`}
+            data-testid="tab-rsvp"
+          >
+            RSVPs ({rsvps.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('gifts')}
+            className={`px-6 py-3 font-semibold transition-colors ${
+              activeTab === 'gifts'
+                ? 'text-warm-brown border-b-4 border-warm-brown -mb-0.5'
+                : 'text-medium-brown hover:text-warm-brown'
+            }`}
+            data-testid="tab-gifts"
+          >
+            Gifts ({registry.length})
+          </button>
+        </div>
+
         {loading ? (
           <div className="text-center py-12">
             <p className="text-medium-brown text-lg">Loading data...</p>
           </div>
         ) : (
           <div className="space-y-8">
+            {/* RSVP Tab */}
+            {activeTab === 'rsvp' && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-xl shadow-lg p-6 border border-border-brown"
+              >
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold text-warm-brown">RSVPs ({rsvps.length})</h2>
+                  <button
+                    onClick={exportRSVPs}
+                    className="flex items-center gap-2 bg-warm-brown text-cream px-4 py-2 rounded-lg hover:bg-dark-brown transition-colors"
+                    data-testid="export-rsvps-btn"
+                  >
+                    <Download size={18} />
+                    Export CSV
+                  </button>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-border-brown">
+                        <th className="text-left py-3 px-4 text-dark-brown font-semibold">Name</th>
+                        <th className="text-left py-3 px-4 text-dark-brown font-semibold">Pax</th>
+                        <th className="text-left py-3 px-4 text-dark-brown font-semibold">Wishes</th>
+                        <th className="text-left py-3 px-4 text-dark-brown font-semibold">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rsvps.map((rsvp, index) => (
+                        <tr key={rsvp.id} className="border-b border-light-cream hover:bg-light-cream/50" data-testid={`rsvp-row-${index}`}>
+                          <td className="py-3 px-4 text-dark-brown">{rsvp.name}</td>
+                          <td className="py-3 px-4 text-dark-brown">{rsvp.pax}</td>
+                          <td className="py-3 px-4 text-dark-brown max-w-md truncate">{rsvp.wishes || '-'}</td>
+                          <td className="py-3 px-4 text-medium-brown text-sm">
+                            {new Date(rsvp.timestamp).toLocaleDateString()}
+                          </td>
+                        </tr>
+                      ))}
+                      {rsvps.length === 0 && (
+                        <tr>
+                          <td colSpan="4" className="text-center py-8 text-medium-brown">
+                            No RSVPs yet
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Gifts Tab */}
+            {activeTab === 'gifts' && (
+              <div className="space-y-6">
+                {/* Registry List Section */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-gold/10 border-2 border-gold rounded-xl shadow-lg p-6"
+                >
+                  <h2 className="text-2xl font-bold text-warm-brown mb-4">Registry List</h2>
+                  <p className="text-dark-brown mb-4">
+                    Manage your gift registry items (Item, Link, Total)
+                  </p>
+                  <div className="flex gap-4">
+                    <button
+                      onClick={exportRegistryList}
+                      className="flex items-center gap-2 bg-warm-brown text-cream px-4 py-2 rounded-lg hover:bg-dark-brown transition-colors"
+                      data-testid="export-registry-list-btn"
+                    >
+                      <Download size={18} />
+                      Download Registry List
+                    </button>
+                    <input
+                      ref={registryListInputRef}
+                      type="file"
+                      accept=".csv"
+                      onChange={handleRegistryListUpload}
+                      className="hidden"
+                      data-testid="registry-list-input"
+                    />
+                    <button
+                      onClick={() => registryListInputRef.current?.click()}
+                      disabled={uploading}
+                      className="flex items-center gap-2 bg-medium-brown text-white px-4 py-2 rounded-lg hover:bg-warm-brown transition-colors disabled:opacity-50"
+                      data-testid="upload-registry-list-btn"
+                    >
+                      <Upload size={18} />
+                      {uploading ? 'Uploading...' : 'Upload Registry List'}
+                    </button>
+                  </div>
+                </motion.div>
+
+                {/* Contributions Section */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="bg-white rounded-xl shadow-lg p-6 border border-border-brown"
+                >
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-bold text-warm-brown">Gift Contributions</h2>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={exportContributions}
+                        className="flex items-center gap-2 bg-warm-brown text-cream px-4 py-2 rounded-lg hover:bg-dark-brown transition-colors"
+                        data-testid="export-contributions-btn"
+                      >
+                        <Download size={18} />
+                        Export CSV
+                      </button>
+                      <input
+                        ref={contributionsInputRef}
+                        type="file"
+                        accept=".csv"
+                        onChange={handleContributionsUpload}
+                        className="hidden"
+                        data-testid="contributions-input"
+                      />
+                      <button
+                        onClick={() => contributionsInputRef.current?.click()}
+                        disabled={uploading}
+                        className="flex items-center gap-2 bg-medium-brown text-white px-4 py-2 rounded-lg hover:bg-warm-brown transition-colors disabled:opacity-50"
+                        data-testid="upload-contributions-btn"
+                      >
+                        <Upload size={18} />
+                        {uploading ? 'Uploading...' : 'Upload Contributions'}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="space-y-6">
+                    {registry.map((item) => (
+                      <div key={item.id} className="border border-border-brown rounded-lg p-4" data-testid={`registry-item-${item.id}`}>
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <h3 className="text-xl font-bold text-warm-brown">{item.name}</h3>
+                            <p className="text-medium-brown text-sm">Total: RM {item.total.toFixed(2)}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-gold font-bold text-lg">RM {item.contributed.toFixed(2)}</p>
+                            <p className="text-medium-brown text-sm">
+                              {((item.contributed / item.total) * 100).toFixed(1)}% funded
+                            </p>
+                          </div>
+                        </div>
+                        {item.contributions.length > 0 ? (
+                          <div className="bg-light-cream/50 rounded-lg p-3">
+                            <p className="text-dark-brown font-semibold mb-2 text-sm">Contributors:</p>
+                            <div className="space-y-2">
+                              {item.contributions.map((contrib, idx) => (
+                                <div key={idx} className="flex justify-between items-center text-sm">
+                                  <div className="flex-1">
+                                    <span className="text-dark-brown">{contrib.contributor_name}</span>
+                                    <span className="text-gold font-semibold ml-4">RM {contrib.amount.toFixed(2)}</span>
+                                  </div>
+                                  <button
+                                    onClick={() => handleDeleteContribution(item.id, idx)}
+                                    className="ml-4 text-red-500 hover:text-red-700 transition-colors p-1"
+                                    title="Delete contribution"
+                                    data-testid={`delete-contribution-${item.id}-${idx}`}
+                                  >
+                                    <Trash2 size={16} />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-medium-brown text-sm italic">No contributions yet</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
             {/* Upload CSV Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
