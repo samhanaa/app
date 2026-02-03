@@ -105,7 +105,7 @@ export const Homepage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="bg-white/80 md:bg-white/60 backdrop-blur-md border border-white/20 shadow-xl rounded-xl md:rounded-2xl p-8 md:p-12"
+            className="bg-white/3 backdrop-blur-md border border-white/20 shadow-xl rounded-xl md:rounded-2xl p-8 md:p-12"
             data-testid="agenda-section"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-warm-brown text-center mb-8">Wedding Agenda</h2>
