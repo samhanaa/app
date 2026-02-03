@@ -148,19 +148,21 @@ export const Homepage = () => {
               data-testid="wishes-section"
             >
               <h2 className="text-3xl md:text-4xl font-bold text-warm-brown text-center mb-8">Wishes from Our Guests</h2>
-              <div className="max-h-96 overflow-y-auto space-y-4 pr-2 custom-scrollbar">
-                {wishes.map((wish, index) => (
-                  <motion.div
-                    key={wish.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-border-brown/30"
-                  >
-                    <p className="text-dark-brown italic mb-2">"{wish.wishes}"</p>
-                    <p className="text-medium-brown text-sm font-semibold">— {wish.name}</p>
-                  </motion.div>
-                ))}
+              <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
+                <div className="space-y-8 text-center">
+                  {wishes.map((wish, index) => (
+                    <motion.div
+                      key={wish.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="py-4"
+                    >
+                      <p className="text-dark-brown text-lg md:text-xl italic mb-3">"{wish.wishes}"</p>
+                      <p className="text-medium-brown font-semibold">— {wish.name}</p>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </motion.div>
           )}
