@@ -89,17 +89,62 @@ export const AdminPage = () => {
       item.contributions.forEach(contrib => {
         allContributions.push({
           item_name: item.name,
-          contributor_name: contrib.contributor_name,
-          amount: `RM ${contrib.amount.toFixed(2)}`,
-          timestamp: new Date(contrib.timestamp).toLocaleString()
+          link: item.link,
+          total: item.total,
+          contributor: contrib.contributor_name,
+          amount: contrib.amount,
+          timestamp: new Date(contrib.timestamp).toISOString()
         });
       });
     });
-    exportToCSV(allContributions, 'gift_contributions.csv', ['Item_Name', 'Contributor_Name', 'Amount', 'Timestamp']);
+    exportToCSV(allContributions, 'gift_contributions.csv', ['Item_name', 'Link', 'Total', 'Contributor', 'Amount', 'Timestamp']);
     toast.success('Contributions exported successfully!');
   };
 
-  const handleFileUpload = async (event) => {
+  const exportRegistryList = () => {
+    const registryList = registry.map(item => ({
+      item: item.name,
+      link: item.link,
+      total: item.total
+    }));
+    exportToCSV(registryList, 'registry_list.csv', ['Item', 'Link', 'Total']);
+    toast.success('Registry list exported successfully!');
+  };
+
+  const handleRegistryListUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.name.endsWith('.csv')) {
+      toast.error('Please upload a CSV file');
+      return;
+    }
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await axios.post(`${API}/registry/upload-registry-list`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      toast.success(`Registry list updated! ${response.data.items_count} items`);
+      fetchData();
+      if (registryListInputRef.current) {
+        registryListInputRef.current.value = '';
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error(error.response?.data?.detail || 'Failed to upload CSV');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleContributionsUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
@@ -119,10 +164,10 @@ export const AdminPage = () => {
         }
       });
       
-      toast.success(`Registry updated! ${response.data.items_count} items, ${response.data.total_contributions} contributions`);
-      fetchData(); // Refresh data
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+      toast.success(`Contributions updated! ${response.data.items_count} items, ${response.data.total_contributions} contributions`);
+      fetchData();
+      if (contributionsInputRef.current) {
+        contributionsInputRef.current.value = '';
       }
     } catch (error) {
       console.error('Upload error:', error);
@@ -132,21 +177,19 @@ export const AdminPage = () => {
     }
   };
 
-  const downloadSampleCSV = () => {
-    const sampleData = [
-      ['Item_name', 'Link', 'Total', 'Contributor', 'Amount', 'Timestamp'],
-      ['Plates', 'https://shopee.com.my', '100', '0', '0', ''],
-      ['Carpet', 'https://shopee.com.my', '200', 'John Doe', '50', new Date().toISOString()],
-      ['Carpet', 'https://shopee.com.my', '200', 'Jane Smith', '30', new Date().toISOString()]
-    ];
-    
-    const csvContent = sampleData.map(row => row.join(',').replace(/,(?=\S)/g, ', ')).join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'registry_template.csv';
-    link.click();
-    toast.success('Sample CSV downloaded!');
+  const handleDeleteContribution = async (itemId, contributionIndex) => {
+    if (!window.confirm('Are you sure you want to delete this contribution?')) {
+      return;
+    }
+
+    try {
+      await axios.delete(`${API}/registry/${itemId}/contribution/${contributionIndex}`);
+      toast.success('Contribution deleted successfully');
+      fetchData();
+    } catch (error) {
+      console.error('Delete error:', error);
+      toast.error(error.response?.data?.detail || 'Failed to delete contribution');
+    }
   };
 
   if (!authenticated) {
