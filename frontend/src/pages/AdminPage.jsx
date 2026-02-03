@@ -19,6 +19,8 @@ export const AdminPage = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('rsvp');
   const [uploading, setUploading] = useState(false);
+  const [sortField, setSortField] = useState('timestamp');
+  const [sortDirection, setSortDirection] = useState('desc');
   const registryListInputRef = useRef(null);
   const contributionsInputRef = useRef(null);
 
