@@ -17,9 +17,17 @@ export const Registry = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [contributeOpen, setContributeOpen] = useState(false);
   const [contributorsOpen, setContributorsOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
+  const [locationOpen, setLocationOpen] = useState(false);
+  const [rsvpOpen, setRsvpOpen] = useState(false);
   const [contributionForm, setContributionForm] = useState({
     contributor_name: '',
     amount: ''
+  });
+  const [rsvpForm, setRsvpForm] = useState({
+    name: '',
+    pax: '',
+    wishes: ''
   });
 
   useEffect(() => {
