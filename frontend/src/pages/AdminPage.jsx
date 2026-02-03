@@ -17,6 +17,8 @@ export const AdminPage = () => {
   const [rsvps, setRsvps] = useState([]);
   const [registry, setRegistry] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (authenticated) {
